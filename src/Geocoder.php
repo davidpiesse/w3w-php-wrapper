@@ -23,6 +23,7 @@ class Geocoder extends AbstractWrapper {
     const METHOD_REVERSE = 'reverse';
     const METHOD_AUTOSUGGEST = 'autosuggest';
     const METHOD_LANGUAGES = 'languages';
+    const METHOD_GRID = 'grid';
 
     private static $default_params = [
         self::METHOD_FORWARD => [
@@ -44,6 +45,9 @@ class Geocoder extends AbstractWrapper {
             ]
         ],
         self::METHOD_LANGUAGES => [
+            'format' => 'json'
+        ],
+        self::METHOD_GRID => [
             'format' => 'json'
         ]
     ];
@@ -119,6 +123,14 @@ class Geocoder extends AbstractWrapper {
     public function languages($params=[]) {
         $params = $this->buildParams(self::METHOD_LANGUAGES, $params);
         $uri = $this->buildUri(self::METHOD_LANGUAGES, $params);
+        return $this->getResponse($uri);
+    }
+    
+    public function grid($coordsNE, $coordsSW, $params=[]) {
+        $bbox = sprintf('%f,%f,%f,%f', $coordsNE['lat'], $coordsNE['lng'],$coordsSW['lat'], $coordsSW['lng'])
+        $params['bbox'] = $bbox;
+        $params = $this->buildParams(self::METHOD_GRID, $params);
+        $uri = $this->buildUri(self::METHOD_GRID, $params);
         return $this->getResponse($uri);
     }
 
